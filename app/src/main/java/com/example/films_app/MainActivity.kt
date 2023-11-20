@@ -25,14 +25,12 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
@@ -42,7 +40,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.films_app.ui.theme.Films_appTheme
-import androidx.compose.runtime.mutableStateOf
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -144,23 +141,43 @@ fun MovieItem(navController: NavController, movie: Movie) {
 
 
 
-data class Movie(val title: String, val description: String, val imageRes: Int)
+data class Movie(
+    val title: String,
+    val imageRes: Int,
+    val premiereDate: String,
+    val director: String,
+    val duration: String,
+    val productionCountry: String,
+    val description: String
+)
 
 val movies = listOf(
     Movie(
         "Captain America: The Winter Soldier",
-        "Description for Captain America: The Winter Soldier goes here...",
-        R.drawable.winter_soldier
+        R.drawable.winter_soldier,
+        "Premiere Date 1",
+        "Director 1",
+        "2h 16m",
+        "USA",
+        "Description for Captain America: The Winter Soldier goes here..."
     ),
     Movie(
         "Captain America: Civil War",
-        "Description for Captain America: Civil War goes here...",
-        R.drawable.civil_war
+        R.drawable.civil_war,
+        "Premiere Date 2",
+        "Director 2",
+        "2h 27m",
+        "USA",
+        "Description for Captain America: Civil War goes here..."
     ),
     Movie(
         "Dr Strange in the Multiverse of Madness",
-        "Description for Dr Strange in the Multiverse of Madness goes here...",
-        R.drawable.dr_strange
+        R.drawable.dr_strange,
+        "Premiere Date 3",
+        "Director 3",
+        "2h 30m",
+        "USA",
+        "Description for Dr Strange in the Multiverse of Madness goes here..."
     )
 )
 
@@ -173,33 +190,56 @@ fun MovieDetail(movie: Movie) {
             .fillMaxSize()
             .padding(8.dp)
     ) {
-        Image(
-            painter = painterResource(id = movie.imageRes),
-            contentDescription = null,
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(200.dp)
-                .clip(MaterialTheme.shapes.medium)
-                .background(MaterialTheme.colorScheme.background)
-        )
+        ) {
+            // Image on the left
+            Image(
+                painter = painterResource(id = movie.imageRes),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(200.dp, 300.dp)
+                    .clip(MaterialTheme.shapes.medium)
+                    .background(MaterialTheme.colorScheme.background)
+            )
+
+            // Specific information on the right
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp)
+            ) {
+                // Title in bold
+                Text(
+                    text = movie.title,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .align(Alignment.Start),
+
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+
+                    Text(text = "Premiere Date: ${movie.premiereDate}")
+                    Text(text = "Director: ${movie.director}")
+                    Text(text = "Duration: ${movie.duration}")
+                    Text(text = "Production Country: ${movie.productionCountry}")
+
+            }
+
+        }
         Spacer(modifier = Modifier.height(16.dp))
+
         Text(
-            text = movie.title,
+            text = movie.description,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Start)
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        // Display personalized description for each movie
-        Text(
-            text = movie.description, // Add a 'description' property to your Movie data class
-            modifier = Modifier
-                .fillMaxWidth()
-                .align(Alignment.Start)
-        )
+        // Additional movie information on the right
 
-        Spacer(modifier = Modifier.height(16.dp))
 
         // TabRow with two tabs: Scenes and Cast
         TabRow(
@@ -230,6 +270,8 @@ fun MovieDetail(movie: Movie) {
         }
     }
 }
+
+
 
 
 
