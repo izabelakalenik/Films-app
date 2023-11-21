@@ -24,7 +24,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.films_app.dataClasses.Movie
 import com.example.films_app.dataClasses.cast
 import com.example.films_app.dataClasses.scenes
@@ -43,8 +45,8 @@ fun MovieDetail(movie: Movie) {
             Image(movie)
             Details(movie)
         }
-        Spacer(modifier = Modifier.height(16.dp))
 
+        Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = movie.description,
             modifier = Modifier
@@ -78,26 +80,28 @@ fun Details(movie: Movie){
     ) {
         Text(
             text = movie.title,
+            fontWeight = FontWeight.Bold,
+            fontSize = 18.sp,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Start),
-
             )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "Release date: ${movie.releaseDate}")
-        Text(text = "Director: ${movie.director}")
-        Text(text = "Duration: ${movie.duration}")
-        Text(text = "Production Country: ${movie.productionCountry}")
+        Text(text = "Release date: ${movie.releaseDate}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(text = "Director: ${movie.director}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(text = "Duration: ${movie.duration}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        Spacer(modifier = Modifier.height(10.dp))
+
+        Text(text = "Production Country: ${movie.productionCountry}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
 
     }
 
 }
-@Composable
-fun Description(movie: Movie){
-
-}
-
 @Composable
 fun TabRow(){
     val selectedTabIndex = remember { mutableIntStateOf(0) }
@@ -107,32 +111,32 @@ fun TabRow(){
         modifier = Modifier
             .fillMaxWidth()
             .background(MaterialTheme.colorScheme.primary)
-            .height(56.dp) // Adjust the height as needed
+            .height(80.dp)
+
     ) {
         Tab(
             selected = selectedTabIndex.intValue == 0,
-            onClick = { selectedTabIndex.intValue = 0 }
+            onClick = { selectedTabIndex.intValue = 0},
+            modifier = Modifier
+                .height(50.dp)
         ) {
-            Text(text = "Scenes")
+            Text(text = "Scenes", fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
         Tab(
             selected = selectedTabIndex.intValue == 1,
-            onClick = { selectedTabIndex.intValue = 1 }
+            onClick = { selectedTabIndex.intValue = 1},
+            modifier = Modifier
+                .height(50.dp)
         ) {
-            Text(text = "Cast")
+            Text(text = "Cast", fontWeight = FontWeight.Bold, fontSize = 18.sp)
         }
     }
 
-    // Display tab content based on the selected tab index
     when (selectedTabIndex.intValue) {
         0 -> FilmScenesTab()
         1 -> CastTab()
     }
 }
-
-
-
-
 
 
 @Composable
