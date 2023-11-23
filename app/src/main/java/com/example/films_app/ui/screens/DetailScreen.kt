@@ -5,13 +5,16 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
@@ -23,13 +26,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.films_app.dataClasses.Movie
+import com.example.films_app.dataClasses.Scene
 import com.example.films_app.dataClasses.cast
-import com.example.films_app.dataClasses.scenes
 
 @Composable
 fun MovieDetail(movie: Movie) {
@@ -55,7 +60,7 @@ fun MovieDetail(movie: Movie) {
         )
         Spacer(modifier = Modifier.height(16.dp))
 
-        TabRow()
+        TabRow(movie)
     }
 }
 
@@ -88,22 +93,22 @@ fun Details(movie: Movie){
             )
         Spacer(modifier = Modifier.height(20.dp))
 
-        Text(text = "Release date: ${movie.releaseDate}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        Text(text = "Release date: ${movie.releaseDate}", fontStyle = FontStyle.Italic)
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(text = "Director: ${movie.director}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        Text(text = "Director: ${movie.director}", fontStyle = FontStyle.Italic)
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(text = "Duration: ${movie.duration}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        Text(text = "Duration: ${movie.duration}", fontStyle = FontStyle.Italic)
         Spacer(modifier = Modifier.height(10.dp))
 
-        Text(text = "Production Country: ${movie.productionCountry}", fontStyle = androidx.compose.ui.text.font.FontStyle.Italic)
+        Text(text = "Production Country: ${movie.productionCountry}", fontStyle = FontStyle.Italic)
 
     }
 
 }
 @Composable
-fun TabRow(){
+fun TabRow(movie: Movie){
     val selectedTabIndex = remember { mutableIntStateOf(0) }
 
     TabRow(
@@ -133,17 +138,26 @@ fun TabRow(){
     }
 
     when (selectedTabIndex.intValue) {
-        0 -> FilmScenesTab()
+        0 -> FilmScenesTab(movie.scenesList)
         1 -> CastTab()
     }
 }
 
-
 @Composable
-fun FilmScenesTab() {
-    LazyRow {
+fun FilmScenesTab(scenes: List<Scene>) {
+    LazyVerticalGrid(columns = GridCells.Fixed(3),
+        modifier = Modifier.fillMaxHeight()) {
         items(scenes) { scene ->
-            Text(text = "Scene: ${scene.sceneName}")
+            Image(
+                painter = painterResource(id = scene.sceneImage),
+                contentDescription = null,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(120.dp)  //well see
+                    .padding(4.dp)
+                    .clip(MaterialTheme.shapes.medium),
+                contentScale = ContentScale.Crop //well see
+            )
         }
     }
 }

@@ -9,7 +9,9 @@ data class Movie(
     val director: String,
     val duration: String,
     val productionCountry: String,
-    val description: String
+    val description: String,
+    val scenesList : List<Scene>,
+    val castList : List<CastMember>
 )
 val movies = listOf(
     Movie(
@@ -19,7 +21,9 @@ val movies = listOf(
         "Anthony Russo",
         "2h 16m",
         "USA",
-        "As Steve Rogers struggles to embrace his role in the modern world, he teams up with a fellow Avenger and S.H.I.E.L.D agent, Black Widow, to battle a new threat from history: an assassin known as the Winter Soldier."
+        "As Steve Rogers struggles to embrace his role in the modern world, he teams up with a fellow Avenger and S.H.I.E.L.D agent, Black Widow, to battle a new threat from history: an assassin known as the Winter Soldier.",
+        scenes1,
+        cast
     ),
     Movie(
         "Captain America: Civil War",
@@ -28,7 +32,9 @@ val movies = listOf(
         "Anthony Russo, Joe Russo",
         "2h 27m",
         "USA",
-        "Political involvement in the Avengers' affairs causes a rift between Captain America and Iron Man. It leads to the civil war between two superhero fractions."
+        "Political involvement in the Avengers' affairs causes a rift between Captain America and Iron Man. It leads to the civil war between two superhero fractions.",
+        scenes2,
+        cast
     ),
     Movie(
         "Doctor Strange in the Multiverse of Madness",
@@ -37,6 +43,8 @@ val movies = listOf(
         "Sam Raimi",
         "2h 06m",
         "USA",
-        "Doctor Strange teams up with a mysterious teenage girl from his dreams who can travel across multiverses, to battle multiple threats, including other-universe versions of himself, which threaten to wipe out millions across the multiverse. They seek help from Wanda the Scarlet Witch, Wong and others."
+        "Doctor Strange teams up with a mysterious teenage girl from his dreams who can travel across multiverses, to battle multiple threats, including other-universe versions of himself, which threaten to wipe out millions across the multiverse. They seek help from Wanda the Scarlet Witch, Wong and others.",
+        scenes3,
+        cast
     )
 )

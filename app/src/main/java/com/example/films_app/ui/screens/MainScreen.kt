@@ -19,7 +19,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.films_app.dataClasses.Movie
@@ -59,6 +61,8 @@ fun MovieItem(navController: NavController, movie: Movie) {
         Spacer(modifier = Modifier.width(16.dp))
         Text(
             text = movie.title,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp,
             modifier = Modifier
                 .align(Alignment.CenterVertically)
         )
