@@ -23,7 +23,7 @@ val movies = listOf(
         "USA",
         "As Steve Rogers struggles to embrace his role in the modern world, he teams up with a fellow Avenger and S.H.I.E.L.D agent, Black Widow, to battle a new threat from history: an assassin known as the Winter Soldier.",
         scenes1,
-        cast
+        cast1
     ),
     Movie(
         "Captain America: Civil War",
@@ -34,7 +34,7 @@ val movies = listOf(
         "USA",
         "Political involvement in the Avengers' affairs causes a rift between Captain America and Iron Man. It leads to the civil war between two superhero fractions.",
         scenes2,
-        cast
+        cast2
     ),
     Movie(
         "Doctor Strange in the Multiverse of Madness",
@@ -45,6 +45,6 @@ val movies = listOf(
         "USA",
         "Doctor Strange teams up with a mysterious teenage girl from his dreams who can travel across multiverses, to battle multiple threats, including other-universe versions of himself, which threaten to wipe out millions across the multiverse. They seek help from Wanda the Scarlet Witch, Wong and others.",
         scenes3,
-        cast
+        cast3
     )
 )

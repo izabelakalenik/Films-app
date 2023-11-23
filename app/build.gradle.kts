@@ -64,6 +64,7 @@ dependencies {
     implementation ("androidx.compose.foundation:foundation:1.5.4")
     implementation ("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.2")
     implementation ("androidx.navigation:navigation-compose:2.7.5")
+    implementation ("com.google.accompanist:accompanist-pager:0.24.0")
     
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

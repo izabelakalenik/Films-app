@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -32,9 +33,9 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.films_app.dataClasses.CastMember
 import com.example.films_app.dataClasses.Movie
 import com.example.films_app.dataClasses.Scene
-import com.example.films_app.dataClasses.cast
 
 @Composable
 fun MovieDetail(movie: Movie) {
@@ -50,7 +51,6 @@ fun MovieDetail(movie: Movie) {
             Image(movie)
             Details(movie)
         }
-
         Spacer(modifier = Modifier.height(16.dp))
         Text(
             text = movie.description,
@@ -58,7 +58,6 @@ fun MovieDetail(movie: Movie) {
                 .fillMaxWidth()
                 .align(Alignment.Start)
         )
-        Spacer(modifier = Modifier.height(16.dp))
 
         TabRow(movie)
     }
@@ -139,7 +138,7 @@ fun TabRow(movie: Movie){
 
     when (selectedTabIndex.intValue) {
         0 -> FilmScenesTab(movie.scenesList)
-        1 -> CastTab()
+        1 -> CastTab(movie.castList)
     }
 }
 
@@ -153,20 +152,36 @@ fun FilmScenesTab(scenes: List<Scene>) {
                 contentDescription = null,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)  //well see
+                    .height(120.dp)
                     .padding(4.dp)
                     .clip(MaterialTheme.shapes.medium),
-                contentScale = ContentScale.Crop //well see
+                contentScale = ContentScale.Crop
             )
         }
     }
 }
 
 @Composable
-fun CastTab() {
+fun CastTab(cast: List<CastMember>) {
     LazyColumn {
         items(cast) { castMember ->
-            Text(text = "Cast: ${castMember.actorName}")
+            Row{
+                Image(
+                    painter = painterResource(id = castMember.actorImage),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .width(120.dp)
+                        .height(120.dp)
+                        .padding(4.dp)
+                        .clip(MaterialTheme.shapes.medium),
+                    contentScale = ContentScale.Crop
+                )
+                Text(text = castMember.actorName,
+                    modifier = Modifier
+                        .padding(15.dp)
+                        .align(Alignment.CenterVertically)
+                )
+            }
         }
     }
 }
