@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -50,11 +49,10 @@ fun MovieItem(navController: NavController, movie: Movie) {
     ) {
         Image(
             painter = painterResource(id = movie.imageRes),
-            contentDescription = null,
+            contentDescription = "Film poster",
             modifier = Modifier
                 .size(120.dp, 180.dp)
                 .clip(shape = MaterialTheme.shapes.medium)
-                .aspectRatio(4 / 6f)
         )
         Spacer(modifier = Modifier.width(16.dp))
         Text(

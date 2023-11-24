@@ -1,12 +1,10 @@
 package com.example.films_app.ui.screens
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -40,14 +38,11 @@ import com.example.films_app.dataClasses.Scene
 fun MovieDetail(movie: Movie) {
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxWidth()
             .padding(8.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-        ) {
+        Row {
             MainImage(movie)
             Details(movie)
         }
@@ -61,11 +56,12 @@ fun MovieDetail(movie: Movie) {
     }
 }
 
+
 @Composable
 fun MainImage(movie: Movie){
     Image(
         painter = painterResource(id = movie.imageRes),
-        contentDescription = null,
+        contentDescription = "Film poster",
         modifier = Modifier
             .size(200.dp, 300.dp)
             .clip(MaterialTheme.shapes.medium)
@@ -99,36 +95,31 @@ fun Details(movie: Movie) {
 @Composable
 fun TabRow(movie: Movie){
     val selectedTabIndex = remember { mutableIntStateOf(0) }
-
-    TabRow(
-        selectedTabIndex = selectedTabIndex.intValue,
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primary)
-            .height(80.dp)
-    ) {
-        Tab(
-            selected = selectedTabIndex.intValue == 0,
-            onClick = { selectedTabIndex.intValue = 0},
+        TabRow(
+            selectedTabIndex = selectedTabIndex.intValue,
             modifier = Modifier
-                .height(50.dp)
+                .fillMaxWidth()
         ) {
-            Text(text = "Scenes", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            Tab(
+                selected = selectedTabIndex.intValue == 0,
+                onClick = { selectedTabIndex.intValue = 0 },
+                modifier = Modifier
+                    .height(50.dp)
+            ) {
+                Text(text = "Scenes", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            }
+            Tab(
+                selected = selectedTabIndex.intValue == 1,
+                onClick = { selectedTabIndex.intValue = 1 },
+            ) {
+                Text(text = "Cast", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+            }
         }
-        Tab(
-            selected = selectedTabIndex.intValue == 1,
-            onClick = { selectedTabIndex.intValue = 1},
-            modifier = Modifier
-                .height(50.dp)
-        ) {
-            Text(text = "Cast", fontWeight = FontWeight.Bold, fontSize = 18.sp)
-        }
-    }
 
-    when (selectedTabIndex.intValue) {
-        0 -> FilmScenesTab(movie.scenesList)
-        1 -> CastTab(movie.castList)
-    }
+        when (selectedTabIndex.intValue) {
+            0 -> FilmScenesTab(movie.scenesList)
+            1 -> CastTab(movie.castList)
+        }
 }
 
 @Composable
@@ -138,7 +129,7 @@ fun FilmScenesTab(scenes: List<Scene>) {
         items(scenes) { scene ->
             Image(
                 painter = painterResource(id = scene.sceneImage),
-                contentDescription = null,
+                contentDescription = "Scenes from film",
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
@@ -152,12 +143,14 @@ fun FilmScenesTab(scenes: List<Scene>) {
 
 @Composable
 fun CastTab(cast: List<CastMember>) {
-    LazyColumn {
+    LazyColumn (
+        modifier = Modifier.fillMaxHeight()
+    ){
         items(cast) { castMember ->
             Row{
                 Image(
                     painter = painterResource(id = castMember.actorImage),
-                    contentDescription = null,
+                    contentDescription = "Actor photo",
                     modifier = Modifier
                         .size(120.dp, 120.dp)
                         .padding(4.dp)
