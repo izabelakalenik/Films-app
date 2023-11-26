@@ -14,6 +14,8 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
@@ -30,7 +32,6 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
 import com.example.films_app.R
 import com.example.films_app.dataClasses.CastMember
 import com.example.films_app.dataClasses.Movie
@@ -41,10 +42,12 @@ fun MovieDetail(movie: Movie) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(dimensionResource(id = R.dimen.medium_padding)),
+            .padding(dimensionResource(id = R.dimen.medium_padding))
+            .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.big_spacer))
     ) {
-        Row {
+        Row (modifier = Modifier
+            .fillMaxWidth()){
             MainImage(movie)
             Details(movie)
         }
@@ -75,7 +78,6 @@ fun MainImage(movie: Movie){
 fun Details(movie: Movie) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.big_padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_spacer))
     ) {
@@ -97,10 +99,9 @@ fun Details(movie: Movie) {
 @Composable
 fun TabRow(movie: Movie){
     val selectedTabIndex = remember { mutableIntStateOf(0) }
+
         TabRow(
             selectedTabIndex = selectedTabIndex.intValue,
-            modifier = Modifier
-                .fillMaxWidth()
         ) {
             Tab(
                 selected = selectedTabIndex.intValue == 0,
@@ -127,7 +128,7 @@ fun TabRow(movie: Movie){
 @Composable
 fun FilmScenesTab(scenes: List<Scene>) {
     LazyVerticalGrid(columns = GridCells.Fixed(3),
-        modifier = Modifier.height(380.dp)) {
+        modifier = Modifier.height(dimensionResource(id = R.dimen.big_height))) {
         items(scenes) { scene ->
             Image(
                 painter = painterResource(id = scene.sceneImage),
@@ -145,10 +146,10 @@ fun FilmScenesTab(scenes: List<Scene>) {
 @Composable
 fun CastTab(cast: List<CastMember>) {
     LazyColumn (
-        modifier = Modifier.height(390.dp)
+        modifier = Modifier.height(dimensionResource(id = R.dimen.big_height))
     ){
         items(cast) { castMember ->
-            Row{
+            Row {
                 Image(
                     painter = painterResource(id = castMember.actorImage),
                     contentDescription = "Actor photo",

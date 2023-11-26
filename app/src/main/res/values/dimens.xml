@@ -10,6 +10,7 @@
     <dimen name="small_image_size">120dp</dimen>
 
     <dimen name="width">16dp</dimen>
+    <dimen name="big_height">370dp</dimen>
     <dimen name="height">50dp</dimen>
 
     <dimen name="big_font_size">20sp</dimen>
