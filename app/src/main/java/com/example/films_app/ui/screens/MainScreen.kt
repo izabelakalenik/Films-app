@@ -31,13 +31,13 @@ import com.example.films_app.dataClasses.movies
 fun MovieList(navController: NavHostController) {
     LazyColumn {
         items(movies) { movie ->
-            MovieItem(navController, movie = movie)
+            MovieItem(movie = movie, navController)
         }
     }
 }
 
 @Composable
-fun MovieItem(navController: NavController, movie: Movie) {
+fun MovieItem(movie: Movie, navController: NavController,) {
     Row(
         modifier = Modifier
             .fillMaxWidth()

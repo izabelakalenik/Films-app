@@ -1,6 +1,7 @@
 package com.example.films_app.ui.screens
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -32,13 +33,14 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.navigation.NavController
 import com.example.films_app.R
 import com.example.films_app.dataClasses.CastMember
 import com.example.films_app.dataClasses.Movie
 import com.example.films_app.dataClasses.Scene
 
 @Composable
-fun MovieDetail(movie: Movie) {
+fun MovieDetail(movie: Movie, navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -48,7 +50,7 @@ fun MovieDetail(movie: Movie) {
     ) {
         Row (modifier = Modifier
             .fillMaxWidth()){
-            MainImage(movie)
+            MainImage(movie, navController)
             Details(movie)
         }
         Text(
@@ -57,21 +59,20 @@ fun MovieDetail(movie: Movie) {
                 .fillMaxWidth()
                 .align(Alignment.Start)
         )
-        TabRow(movie)
+        TabRow(movie, navController)
     }
 }
 
-
 @Composable
-fun MainImage(movie: Movie){
+fun MainImage(movie: Movie, navController: NavController){
     Image(
         painter = painterResource(id = movie.imageRes),
         contentDescription = "Film poster",
         modifier = Modifier
             .size(dimensionResource(id = R.dimen.huge_image_size), dimensionResource(id = R.dimen.enormous_image_size))
             .clip(MaterialTheme.shapes.medium)
+            .clickable(onClick = { navController.navigate("photo/${movie.imageRes}")})
     )
-
 }
 
 @Composable
@@ -96,8 +97,9 @@ fun Details(movie: Movie) {
         Text("Production Country: ${movie.productionCountry}", fontStyle = FontStyle.Italic)
     }
 }
+
 @Composable
-fun TabRow(movie: Movie){
+fun TabRow(movie: Movie, navController: NavController){
     val selectedTabIndex = remember { mutableIntStateOf(0) }
 
         TabRow(
@@ -120,13 +122,13 @@ fun TabRow(movie: Movie){
         }
 
         when (selectedTabIndex.intValue) {
-            0 -> FilmScenesTab(movie.scenesList)
-            1 -> CastTab(movie.castList)
+            0 -> FilmScenesTab(movie.scenesList, navController)
+            1 -> CastTab(movie.castList, navController)
         }
 }
 
 @Composable
-fun FilmScenesTab(scenes: List<Scene>) {
+fun FilmScenesTab(scenes: List<Scene>, navController: NavController) {
     LazyVerticalGrid(columns = GridCells.Fixed(3),
         modifier = Modifier.height(dimensionResource(id = R.dimen.big_height))) {
         items(scenes) { scene ->
@@ -136,7 +138,8 @@ fun FilmScenesTab(scenes: List<Scene>) {
                 modifier = Modifier
                     .height(dimensionResource(id = R.dimen.small_image_size))
                     .padding(dimensionResource(id = R.dimen.small_padding))
-                    .clip(MaterialTheme.shapes.medium),
+                    .clip(MaterialTheme.shapes.medium)
+                    .clickable(onClick = { navController.navigate("photo/${scene.sceneImage}")}),
                 contentScale = ContentScale.Crop
             )
         }
@@ -144,7 +147,7 @@ fun FilmScenesTab(scenes: List<Scene>) {
 }
 
 @Composable
-fun CastTab(cast: List<CastMember>) {
+fun CastTab(cast: List<CastMember>, navController: NavController) {
     LazyColumn (
         modifier = Modifier.height(dimensionResource(id = R.dimen.big_height))
     ){
@@ -156,7 +159,8 @@ fun CastTab(cast: List<CastMember>) {
                     modifier = Modifier
                         .size(dimensionResource(id = R.dimen.small_image_size), dimensionResource(id = R.dimen.small_image_size))
                         .padding(dimensionResource(id = R.dimen.small_padding))
-                        .clip(MaterialTheme.shapes.medium),
+                        .clip(MaterialTheme.shapes.medium)
+                        .clickable(onClick = { navController.navigate("photo/${castMember.actorImage}")}),
                     contentScale = ContentScale.Crop
                 )
                 Text(text = castMember.actorName,
