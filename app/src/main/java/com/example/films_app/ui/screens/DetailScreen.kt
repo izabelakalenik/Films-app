@@ -25,11 +25,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import com.example.films_app.R
 import com.example.films_app.dataClasses.CastMember
 import com.example.films_app.dataClasses.Movie
 import com.example.films_app.dataClasses.Scene
@@ -39,8 +40,8 @@ fun MovieDetail(movie: Movie) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
+            .padding(dimensionResource(id = R.dimen.medium_padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.big_spacer))
     ) {
         Row {
             MainImage(movie)
@@ -63,7 +64,7 @@ fun MainImage(movie: Movie){
         painter = painterResource(id = movie.imageRes),
         contentDescription = "Film poster",
         modifier = Modifier
-            .size(200.dp, 300.dp)
+            .size(dimensionResource(id = R.dimen.huge_image_size), dimensionResource(id = R.dimen.enormous_image_size))
             .clip(MaterialTheme.shapes.medium)
     )
 
@@ -74,13 +75,13 @@ fun Details(movie: Movie) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
+            .padding(dimensionResource(id = R.dimen.big_padding)),
+        verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_spacer))
     ) {
         Text(
             text = movie.title,
             fontWeight = FontWeight.Bold,
-            fontSize = 18.sp,
+            fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() },
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Start),
@@ -104,15 +105,15 @@ fun TabRow(movie: Movie){
                 selected = selectedTabIndex.intValue == 0,
                 onClick = { selectedTabIndex.intValue = 0 },
                 modifier = Modifier
-                    .height(50.dp)
+                    .height(dimensionResource(id = R.dimen.height))
             ) {
-                Text(text = "Scenes", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(text = "Scenes", fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
             }
             Tab(
                 selected = selectedTabIndex.intValue == 1,
                 onClick = { selectedTabIndex.intValue = 1 },
             ) {
-                Text(text = "Cast", fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                Text(text = "Cast", fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
             }
         }
 
@@ -132,8 +133,8 @@ fun FilmScenesTab(scenes: List<Scene>) {
                 contentDescription = "Scenes from film",
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(120.dp)
-                    .padding(4.dp)
+                    .height(dimensionResource(id = R.dimen.big_padding))
+                    .padding(dimensionResource(id = R.dimen.small_padding))
                     .clip(MaterialTheme.shapes.medium),
                 contentScale = ContentScale.Crop
             )
@@ -152,14 +153,14 @@ fun CastTab(cast: List<CastMember>) {
                     painter = painterResource(id = castMember.actorImage),
                     contentDescription = "Actor photo",
                     modifier = Modifier
-                        .size(120.dp, 120.dp)
-                        .padding(4.dp)
+                        .size(dimensionResource(id = R.dimen.big_padding), dimensionResource(id = R.dimen.big_padding))
+                        .padding(dimensionResource(id = R.dimen.small_padding))
                         .clip(MaterialTheme.shapes.medium),
                     contentScale = ContentScale.Crop
                 )
                 Text(text = castMember.actorName,
                     modifier = Modifier
-                        .padding(16.dp)
+                        .padding(dimensionResource(id = R.dimen.big_padding))
                         .align(Alignment.CenterVertically)
                 )
             }

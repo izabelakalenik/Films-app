@@ -11,6 +11,8 @@ import com.example.films_app.ui.screens.MovieDetail
 import com.example.films_app.ui.screens.MovieList
 import com.example.films_app.ui.theme.FilmsAppTheme
 
+const val MAIN_SCREEN_ROUTE = "movieList"
+const val DETAIL_SCREEN_ROUTE = "movieDetail/{movieId}"
 
 @Composable
 fun AppNavigation() {
@@ -19,13 +21,13 @@ fun AppNavigation() {
 
         NavHost(
             navController = navController,
-            startDestination = "movieList"
+            startDestination = MAIN_SCREEN_ROUTE
         ) {
-            composable("movieList") {
+            composable(MAIN_SCREEN_ROUTE) {
                 MovieList(navController)
             }
             composable(
-                "movieDetail/{movieId}",
+                DETAIL_SCREEN_ROUTE,
                 arguments = listOf(navArgument("movieId") { type = NavType.StringType })
             ) { backStackEntry ->
                 val movieId = backStackEntry.arguments?.getString("movieId")

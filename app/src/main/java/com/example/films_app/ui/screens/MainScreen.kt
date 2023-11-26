@@ -16,12 +16,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
+import com.example.films_app.R
 import com.example.films_app.dataClasses.Movie
 import com.example.films_app.dataClasses.movies
 
@@ -40,7 +41,7 @@ fun MovieItem(navController: NavController, movie: Movie) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp)
+            .padding(dimensionResource(id = R.dimen.big_padding))
             .clickable {
                 navController.navigate("movieDetail/${movie.title}") {
                     launchSingleTop = true
@@ -51,14 +52,14 @@ fun MovieItem(navController: NavController, movie: Movie) {
             painter = painterResource(id = movie.imageRes),
             contentDescription = "Film poster",
             modifier = Modifier
-                .size(120.dp, 180.dp)
+                .size(dimensionResource(id = R.dimen.small_image_size), dimensionResource(id = R.dimen.big_image_size))
                 .clip(shape = MaterialTheme.shapes.medium)
         )
-        Spacer(modifier = Modifier.width(16.dp))
+        Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.width)))
         Text(
             text = movie.title,
             fontWeight = FontWeight.Bold,
-            fontSize = 20.sp,
+            fontSize =  with(LocalDensity.current) { dimensionResource(id = R.dimen.big_font_size).toSp() },
             modifier = Modifier
                 .align(Alignment.CenterVertically)
         )
