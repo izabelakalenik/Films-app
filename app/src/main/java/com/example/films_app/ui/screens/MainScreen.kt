@@ -37,7 +37,7 @@ fun MovieList(navController: NavHostController) {
 }
 
 @Composable
-fun MovieItem(movie: Movie, navController: NavController,) {
+fun MovieItem(movie: Movie, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
