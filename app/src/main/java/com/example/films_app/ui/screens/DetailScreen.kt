@@ -4,7 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -30,6 +30,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import com.example.films_app.R
 import com.example.films_app.dataClasses.CastMember
 import com.example.films_app.dataClasses.Movie
@@ -39,7 +40,7 @@ import com.example.films_app.dataClasses.Scene
 fun MovieDetail(movie: Movie) {
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .padding(dimensionResource(id = R.dimen.medium_padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.big_spacer))
     ) {
@@ -126,14 +127,13 @@ fun TabRow(movie: Movie){
 @Composable
 fun FilmScenesTab(scenes: List<Scene>) {
     LazyVerticalGrid(columns = GridCells.Fixed(3),
-        modifier = Modifier.fillMaxHeight()) {
+        modifier = Modifier.height(380.dp)) {
         items(scenes) { scene ->
             Image(
                 painter = painterResource(id = scene.sceneImage),
                 contentDescription = "Scenes from film",
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .height(dimensionResource(id = R.dimen.big_padding))
+                    .height(dimensionResource(id = R.dimen.small_image_size))
                     .padding(dimensionResource(id = R.dimen.small_padding))
                     .clip(MaterialTheme.shapes.medium),
                 contentScale = ContentScale.Crop
@@ -145,7 +145,7 @@ fun FilmScenesTab(scenes: List<Scene>) {
 @Composable
 fun CastTab(cast: List<CastMember>) {
     LazyColumn (
-        modifier = Modifier.fillMaxHeight()
+        modifier = Modifier.height(390.dp)
     ){
         items(cast) { castMember ->
             Row{
@@ -153,7 +153,7 @@ fun CastTab(cast: List<CastMember>) {
                     painter = painterResource(id = castMember.actorImage),
                     contentDescription = "Actor photo",
                     modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.big_padding), dimensionResource(id = R.dimen.big_padding))
+                        .size(dimensionResource(id = R.dimen.small_image_size), dimensionResource(id = R.dimen.small_image_size))
                         .padding(dimensionResource(id = R.dimen.small_padding))
                         .clip(MaterialTheme.shapes.medium),
                     contentScale = ContentScale.Crop
