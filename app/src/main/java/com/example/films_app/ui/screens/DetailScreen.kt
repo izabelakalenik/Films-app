@@ -2,11 +2,13 @@ package com.example.films_app.ui.screens
 import android.net.Uri
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -25,12 +27,9 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,11 +37,13 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.lifecycle.Lifecycle
 import androidx.media3.common.MediaItem
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.PlayerView
@@ -52,6 +53,7 @@ import com.example.films_app.dataClasses.CastMember
 import com.example.films_app.dataClasses.Movie
 import com.example.films_app.dataClasses.Scene
 import com.example.films_app.dataClasses.Trailer
+import androidx.compose.runtime.remember as remember
 
 
 @Composable
@@ -168,48 +170,115 @@ fun FilmScenesTab(scenes: List<Scene>, navController: NavController) {
     }
 }
 
+//@Composable
+//fun TrailersTab(trailers: List<Trailer>) {
+//    val context = LocalContext.current
+//
+//    val exoPlayer = remember { ExoPlayer.Builder(context).build() }
+//
+//    val isPlaying by remember { mutableStateOf(true) }
+//
+//    DisposableEffect(exoPlayer) {
+//        trailers.forEach { trailer ->
+//            val uri = "android.resource://${context.packageName}/${trailer.trailerID}"
+//            val mediaItem = MediaItem.fromUri(uri)
+//            exoPlayer.addMediaItem(mediaItem)
+//        }
+//
+//        exoPlayer.prepare()
+//        exoPlayer.playWhenReady = isPlaying
+//
+//        onDispose {
+//            exoPlayer.stop()
+//            exoPlayer.release()
+//        }
+//    }
+//
+//    val playerView = rememberUpdatedState(exoPlayer)
+//
+//    AndroidView(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(dimensionResource(id = R.dimen.big_padding))
+//            .clip(MaterialTheme.shapes.medium),
+//        factory = { ctx ->
+//            PlayerView(ctx).apply {
+//                layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+//                player = playerView.value
+//            }
+//        }
+//    )
+//}
+
 @Composable
 fun TrailersTab(trailers: List<Trailer>) {
     val context = LocalContext.current
+    val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    val exoPlayer = remember { ExoPlayer.Builder(context).build() }
+    var player by remember {
+        mutableStateOf<ExoPlayer?>(null)
+    }
 
-    var isPlaying by remember { mutableStateOf(true) }
+    DisposableEffect(context, lifecycle) {
+        player = ExoPlayer.Builder(context).build()
 
-    DisposableEffect(exoPlayer) {
         trailers.forEach { trailer ->
             val uri = "android.resource://${context.packageName}/${trailer.trailerID}"
             val mediaItem = MediaItem.fromUri(uri)
-            exoPlayer.addMediaItem(mediaItem)
+            player?.addMediaItem(mediaItem)
         }
 
-        exoPlayer.prepare()
-        exoPlayer.playWhenReady = isPlaying
+        player?.prepare()
 
         onDispose {
-            exoPlayer.stop()
-            exoPlayer.release()
+            // Handle cleanup when the component is destroyed
+            player?.stop()
+            player?.release()
         }
     }
 
-    val playerView =
-        rememberUpdatedState(exoPlayer)
     AndroidView(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(dimensionResource(id = R.dimen.big_padding))
-            .clip(MaterialTheme.shapes.medium)
-            .clickable {
-                isPlaying = !isPlaying
-                playerView.value.playWhenReady = isPlaying
-            },
         factory = { ctx ->
             PlayerView(ctx).apply {
-                player = playerView.value
+                layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
+                player = player
             }
-        }
+        },
+        update = { playerView ->
+            playerView.player = player
+            when (lifecycle.currentState) {
+                Lifecycle.State.STARTED -> {
+                    // Start or resume playback
+                    player?.play()
+                }
+                Lifecycle.State.CREATED, Lifecycle.State.RESUMED -> {
+                    // Ensure playback is paused when not in the STARTED state
+                    player?.pause()
+                }
+                Lifecycle.State.DESTROYED -> {
+                    // Handle when the component is destroyed
+                    playerView.player = null
+                }
+                else -> {
+                    // Ensure playback is paused for other states
+                    player?.pause()
+                }
+            }
+        },
+
+        modifier = Modifier
+            .fillMaxWidth()
+            .aspectRatio(16 / 9f)
+
     )
 }
+
+
+
+
+
+
+
 
 //@Composable
 //fun TrailersTab(trailers: List<Trailer>) {
