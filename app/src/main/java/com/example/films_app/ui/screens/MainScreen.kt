@@ -47,6 +47,7 @@ fun MovieList(navController: NavHostController) {
     }
 
 }
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppTopBar(title: String) {
@@ -68,7 +69,6 @@ fun AppTopBar(title: String) {
         )
     }
 }
-
 
 @Composable
 fun MovieItem(movie: Movie, navController: NavController) {
