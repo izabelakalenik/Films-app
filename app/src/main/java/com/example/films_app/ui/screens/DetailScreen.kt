@@ -1,5 +1,4 @@
 package com.example.films_app.ui.screens
-import android.net.Uri
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
@@ -170,69 +169,24 @@ fun FilmScenesTab(scenes: List<Scene>, navController: NavController) {
     }
 }
 
-//@Composable
-//fun TrailersTab(trailers: List<Trailer>) {
-//    val context = LocalContext.current
-//
-//    val exoPlayer = remember { ExoPlayer.Builder(context).build() }
-//
-//    val isPlaying by remember { mutableStateOf(true) }
-//
-//    DisposableEffect(exoPlayer) {
-//        trailers.forEach { trailer ->
-//            val uri = "android.resource://${context.packageName}/${trailer.trailerID}"
-//            val mediaItem = MediaItem.fromUri(uri)
-//            exoPlayer.addMediaItem(mediaItem)
-//        }
-//
-//        exoPlayer.prepare()
-//        exoPlayer.playWhenReady = isPlaying
-//
-//        onDispose {
-//            exoPlayer.stop()
-//            exoPlayer.release()
-//        }
-//    }
-//
-//    val playerView = rememberUpdatedState(exoPlayer)
-//
-//    AndroidView(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(dimensionResource(id = R.dimen.big_padding))
-//            .clip(MaterialTheme.shapes.medium),
-//        factory = { ctx ->
-//            PlayerView(ctx).apply {
-//                layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-//                player = playerView.value
-//            }
-//        }
-//    )
-//}
-
 @Composable
 fun TrailersTab(trailers: List<Trailer>) {
     val context = LocalContext.current
     val lifecycle = LocalLifecycleOwner.current.lifecycle
 
-    var player by remember {
-        mutableStateOf<ExoPlayer?>(null)
-    }
+    var player by remember { mutableStateOf<ExoPlayer?>(null) }
 
     DisposableEffect(context, lifecycle) {
         player = ExoPlayer.Builder(context).build()
 
         trailers.forEach { trailer ->
             val uri = "android.resource://${context.packageName}/${trailer.trailerID}"
-            val mediaItem = MediaItem.fromUri(uri)
-            player?.addMediaItem(mediaItem)
+            player?.addMediaItem(MediaItem.fromUri(uri))
         }
 
         player?.prepare()
 
         onDispose {
-            // Handle cleanup when the component is destroyed
-            player?.stop()
             player?.release()
         }
     }
@@ -241,86 +195,18 @@ fun TrailersTab(trailers: List<Trailer>) {
         factory = { ctx ->
             PlayerView(ctx).apply {
                 layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, WRAP_CONTENT)
-                player = player
             }
         },
         update = { playerView ->
             playerView.player = player
             when (lifecycle.currentState) {
-                Lifecycle.State.STARTED -> {
-                    // Start or resume playback
-                    player?.play()
-                }
-                Lifecycle.State.CREATED, Lifecycle.State.RESUMED -> {
-                    // Ensure playback is paused when not in the STARTED state
-                    player?.pause()
-                }
-                Lifecycle.State.DESTROYED -> {
-                    // Handle when the component is destroyed
-                    playerView.player = null
-                }
-                else -> {
-                    // Ensure playback is paused for other states
-                    player?.pause()
-                }
+                Lifecycle.State.STARTED -> player?.play()
+                else -> player?.pause()
             }
         },
-
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(16 / 9f)
-
+        modifier = Modifier.fillMaxSize().aspectRatio(16 / 9f)
     )
 }
-
-
-
-
-
-
-
-
-//@Composable
-//fun TrailersTab(trailers: List<Trailer>) {
-//    val context = LocalContext.current
-//
-//    val exoPlayer = remember(context) {
-//        ExoPlayer.Builder(context).build().apply {
-//            trailers.forEach { trailer ->
-//                val videoUrl = "android.resource://${context.packageName}/${trailer.trailerID}"
-//                val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
-//                addMediaItem(mediaItem)
-//            }
-//            prepare()
-//            playWhenReady = true
-//        }
-//    }
-//    val playerView = rememberUpdatedState(exoPlayer)
-//
-//    DisposableEffect(exoPlayer) {
-//        onDispose {
-//            exoPlayer.release()
-//        }
-//    }
-//
-//    AndroidView(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(dimensionResource(id = R.dimen.big_padding))
-//            .clip(MaterialTheme.shapes.medium),
-//        factory = { ctx ->
-//            PlayerView(ctx).apply {
-//                layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
-//                player = playerView.value
-//            }
-//        }, update = { view ->
-//            view.player = exoPlayer
-//            view.onResume()
-//        }
-//    )
-//}
-
-
 
 
 @Composable
