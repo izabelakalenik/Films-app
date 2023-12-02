@@ -1,5 +1,7 @@
 package com.example.films_app.ui.screens
-
+import android.net.Uri
+import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +25,7 @@ import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -169,13 +172,10 @@ fun FilmScenesTab(scenes: List<Scene>, navController: NavController) {
 fun TrailersTab(trailers: List<Trailer>) {
     val context = LocalContext.current
 
-    // Create an ExoPlayer instance
     val exoPlayer = remember { ExoPlayer.Builder(context).build() }
 
-    // Create a MutableState to track whether the player is playing or not
     var isPlaying by remember { mutableStateOf(true) }
 
-    // Initialize the ExoPlayer
     DisposableEffect(exoPlayer) {
         trailers.forEach { trailer ->
             val uri = "android.resource://${context.packageName}/${trailer.trailerID}"
@@ -187,32 +187,70 @@ fun TrailersTab(trailers: List<Trailer>) {
         exoPlayer.playWhenReady = isPlaying
 
         onDispose {
-            // Stop playback and release the ExoPlayer when the component is disposed
             exoPlayer.stop()
             exoPlayer.release()
         }
     }
 
-    // Create a PlayerView to display the video
     val playerView =
-        rememberUpdatedState(exoPlayer) // Remember the PlayerView across recompositions
+        rememberUpdatedState(exoPlayer)
     AndroidView(
         modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.big_padding))
             .clip(MaterialTheme.shapes.medium)
             .clickable {
-                // Toggle play state on click
                 isPlaying = !isPlaying
                 playerView.value.playWhenReady = isPlaying
             },
-        factory = { context ->
-            PlayerView(context).apply {
+        factory = { ctx ->
+            PlayerView(ctx).apply {
                 player = playerView.value
             }
         }
     )
 }
+
+//@Composable
+//fun TrailersTab(trailers: List<Trailer>) {
+//    val context = LocalContext.current
+//
+//    val exoPlayer = remember(context) {
+//        ExoPlayer.Builder(context).build().apply {
+//            trailers.forEach { trailer ->
+//                val videoUrl = "android.resource://${context.packageName}/${trailer.trailerID}"
+//                val mediaItem = MediaItem.fromUri(Uri.parse(videoUrl))
+//                addMediaItem(mediaItem)
+//            }
+//            prepare()
+//            playWhenReady = true
+//        }
+//    }
+//    val playerView = rememberUpdatedState(exoPlayer)
+//
+//    DisposableEffect(exoPlayer) {
+//        onDispose {
+//            exoPlayer.release()
+//        }
+//    }
+//
+//    AndroidView(
+//        modifier = Modifier
+//            .fillMaxSize()
+//            .padding(dimensionResource(id = R.dimen.big_padding))
+//            .clip(MaterialTheme.shapes.medium),
+//        factory = { ctx ->
+//            PlayerView(ctx).apply {
+//                layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, MATCH_PARENT)
+//                player = playerView.value
+//            }
+//        }, update = { view ->
+//            view.player = exoPlayer
+//            view.onResume()
+//        }
+//    )
+//}
+
 
 
 
