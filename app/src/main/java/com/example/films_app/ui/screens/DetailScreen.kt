@@ -22,22 +22,34 @@ import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.media3.common.MediaItem
+import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import com.example.films_app.R
 import com.example.films_app.dataClasses.CastMember
 import com.example.films_app.dataClasses.Movie
 import com.example.films_app.dataClasses.Scene
+import com.example.films_app.dataClasses.Trailer
+
 
 @Composable
 fun MovieDetail(movie: Movie, navController: NavController) {
@@ -117,13 +129,20 @@ fun TabRow(movie: Movie, navController: NavController){
                 selected = selectedTabIndex.intValue == 1,
                 onClick = { selectedTabIndex.intValue = 1 },
             ) {
+                Text(text = "Trailers", fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
+            }
+            Tab(
+                selected = selectedTabIndex.intValue == 2,
+                onClick = { selectedTabIndex.intValue = 2 },
+            ) {
                 Text(text = "Cast", fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
             }
         }
 
         when (selectedTabIndex.intValue) {
             0 -> FilmScenesTab(movie.scenesList, navController)
-            1 -> CastTab(movie.castList, navController)
+            1 -> TrailersTab(movie.trailersList)
+            2 -> CastTab(movie.castList, navController)
         }
 }
 
@@ -145,6 +164,57 @@ fun FilmScenesTab(scenes: List<Scene>, navController: NavController) {
         }
     }
 }
+
+@Composable
+fun TrailersTab(trailers: List<Trailer>) {
+    val context = LocalContext.current
+
+    // Create an ExoPlayer instance
+    val exoPlayer = remember { ExoPlayer.Builder(context).build() }
+
+    // Create a MutableState to track whether the player is playing or not
+    var isPlaying by remember { mutableStateOf(true) }
+
+    // Initialize the ExoPlayer
+    DisposableEffect(exoPlayer) {
+        trailers.forEach { trailer ->
+            val uri = "android.resource://${context.packageName}/${trailer.trailerID}"
+            val mediaItem = MediaItem.fromUri(uri)
+            exoPlayer.addMediaItem(mediaItem)
+        }
+
+        exoPlayer.prepare()
+        exoPlayer.playWhenReady = isPlaying
+
+        onDispose {
+            // Stop playback and release the ExoPlayer when the component is disposed
+            exoPlayer.stop()
+            exoPlayer.release()
+        }
+    }
+
+    // Create a PlayerView to display the video
+    val playerView =
+        rememberUpdatedState(exoPlayer) // Remember the PlayerView across recompositions
+    AndroidView(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(dimensionResource(id = R.dimen.big_padding))
+            .clip(MaterialTheme.shapes.medium)
+            .clickable {
+                // Toggle play state on click
+                isPlaying = !isPlaying
+                playerView.value.playWhenReady = isPlaying
+            },
+        factory = { context ->
+            PlayerView(context).apply {
+                player = playerView.value
+            }
+        }
+    )
+}
+
+
 
 @Composable
 fun CastTab(cast: List<CastMember>, navController: NavController) {
