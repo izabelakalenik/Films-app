@@ -85,9 +85,12 @@ fun MainImage(movie: Movie, navController: NavController){
         painter = painterResource(id = movie.imageRes),
         contentDescription = "Film poster",
         modifier = Modifier
-            .size(dimensionResource(id = R.dimen.huge_image_size), dimensionResource(id = R.dimen.enormous_image_size))
+            .size(
+                dimensionResource(id = R.dimen.huge_image_size),
+                dimensionResource(id = R.dimen.enormous_image_size)
+            )
             .clip(MaterialTheme.shapes.medium)
-            .clickable(onClick = { navController.navigate("photo/${movie.imageRes}")})
+            .clickable(onClick = { navController.navigate("photo/${movie.imageRes}") })
     )
 }
 
@@ -162,7 +165,7 @@ fun FilmScenesTab(scenes: List<Scene>, navController: NavController) {
                     .height(dimensionResource(id = R.dimen.small_image_size))
                     .padding(dimensionResource(id = R.dimen.small_padding))
                     .clip(MaterialTheme.shapes.medium)
-                    .clickable(onClick = { navController.navigate("photo/${scene.sceneImage}")}),
+                    .clickable(onClick = { navController.navigate("photo/${scene.sceneImage}") }),
                 contentScale = ContentScale.Crop
             )
         }
@@ -191,6 +194,11 @@ fun TrailersTab(trailers: List<Trailer>) {
         }
     }
 
+    VideoView(lifecycle, player)
+}
+
+@Composable
+fun VideoView(lifecycle: Lifecycle, player: ExoPlayer?) {
     AndroidView(
         factory = { ctx ->
             PlayerView(ctx).apply {
@@ -204,7 +212,9 @@ fun TrailersTab(trailers: List<Trailer>) {
                 else -> player?.pause()
             }
         },
-        modifier = Modifier.fillMaxSize().aspectRatio(16 / 9f)
+        modifier = Modifier
+            .fillMaxSize()
+            .aspectRatio(16 / 9f)
     )
 }
 
@@ -220,10 +230,13 @@ fun CastTab(cast: List<CastMember>, navController: NavController) {
                     painter = painterResource(id = castMember.actorImage),
                     contentDescription = "Actor photo",
                     modifier = Modifier
-                        .size(dimensionResource(id = R.dimen.small_image_size), dimensionResource(id = R.dimen.small_image_size))
+                        .size(
+                            dimensionResource(id = R.dimen.small_image_size),
+                            dimensionResource(id = R.dimen.small_image_size)
+                        )
                         .padding(dimensionResource(id = R.dimen.small_padding))
                         .clip(MaterialTheme.shapes.medium)
-                        .clickable(onClick = { navController.navigate("photo/${castMember.actorImage}")}),
+                        .clickable(onClick = { navController.navigate("photo/${castMember.actorImage}") }),
                     contentScale = ContentScale.Crop
                 )
                 Text(text = castMember.actorName,
