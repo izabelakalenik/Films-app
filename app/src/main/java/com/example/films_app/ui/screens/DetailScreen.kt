@@ -28,7 +28,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -57,6 +59,8 @@ import androidx.compose.runtime.remember as remember
 
 @Composable
 fun MovieDetail(movie: Movie, navController: NavController) {
+    var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -64,8 +68,7 @@ fun MovieDetail(movie: Movie, navController: NavController) {
             .verticalScroll(rememberScrollState()),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.big_spacer))
     ) {
-        Row (modifier = Modifier
-            .fillMaxWidth()){
+        Row(modifier = Modifier.fillMaxWidth()) {
             MainImage(movie, navController)
             Details(movie)
         }
@@ -75,7 +78,9 @@ fun MovieDetail(movie: Movie, navController: NavController) {
                 .fillMaxWidth()
                 .align(Alignment.Start)
         )
-        TabRow(movie, navController)
+        TabRow(selectedTabIndex, movie, navController) { newSelectedTabIndex ->
+            selectedTabIndex = newSelectedTabIndex
+        }
     }
 }
 
@@ -118,39 +123,34 @@ fun Details(movie: Movie) {
 }
 
 @Composable
-fun TabRow(movie: Movie, navController: NavController){
-    val selectedTabIndex = remember { mutableIntStateOf(0) }
+fun TabRow(selectedTabIndex: Int, movie: Movie, navController: NavController, onTabSelected: (Int) -> Unit) {
+    val tabTitles = listOf("Scenes", "Trailers", "Cast")
+    val selectedTabIndices = remember { mutableStateListOf<Int>().apply { repeat(tabTitles.size) { add(if (it == selectedTabIndex) 1 else 0) } } }
 
-        TabRow(
-            selectedTabIndex = selectedTabIndex.intValue,
-        ) {
+    TabRow(
+        selectedTabIndex = selectedTabIndex,
+    ) {
+        tabTitles.forEachIndexed { index, title ->
             Tab(
-                selected = selectedTabIndex.intValue == 0,
-                onClick = { selectedTabIndex.intValue = 0 },
+                selected = selectedTabIndices[index] == 1,
+                onClick = {
+                    selectedTabIndices.fill(0)
+                    selectedTabIndices[index] = 1
+                    onTabSelected(index)
+                },
                 modifier = Modifier
                     .height(dimensionResource(id = R.dimen.height))
             ) {
-                Text(text = "Scenes", fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
-            }
-            Tab(
-                selected = selectedTabIndex.intValue == 1,
-                onClick = { selectedTabIndex.intValue = 1 },
-            ) {
-                Text(text = "Trailers", fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
-            }
-            Tab(
-                selected = selectedTabIndex.intValue == 2,
-                onClick = { selectedTabIndex.intValue = 2 },
-            ) {
-                Text(text = "Cast", fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
+                Text(text = title, fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
             }
         }
+    }
 
-        when (selectedTabIndex.intValue) {
-            0 -> FilmScenesTab(movie.scenesList, navController)
-            1 -> TrailersTab(movie.trailersList)
-            2 -> CastTab(movie.castList, navController)
-        }
+    when (selectedTabIndex) {
+        0 -> FilmScenesTab(movie.scenesList, navController)
+        1 -> TrailersTab(movie.trailersList)
+        2 -> CastTab(movie.castList, navController)
+    }
 }
 
 @Composable
