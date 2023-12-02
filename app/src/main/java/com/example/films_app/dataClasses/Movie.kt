@@ -36,7 +36,7 @@ val movies = listOf(
         "USA",
         "Political involvement in the Avengers' affairs causes a rift between Captain America and Iron Man. It leads to the civil war between two superhero fractions.",
         scenes2,
-        trailers1,
+        trailers2,
         cast2
     ),
     Movie(
@@ -48,7 +48,7 @@ val movies = listOf(
         "USA",
         "Doctor Strange teams up with a mysterious teenage girl from his dreams who can travel across multiverses, to battle multiple threats, including other-universe versions of himself, which threaten to wipe out millions across the multiverse. They seek help from Wanda the Scarlet Witch, Wong and others.",
         scenes3,
-        trailers1,
+        trailers3,
         cast3
     )
 )

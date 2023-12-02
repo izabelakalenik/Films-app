@@ -19,5 +19,7 @@
     <dimen name="big_spacer">16sp</dimen>
     <dimen name="small_spacer">10sp</dimen>
 
+    <dimen name="top_bar_height">35sp</dimen>
+
 
 </resources>
