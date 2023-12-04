@@ -25,23 +25,24 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import com.example.films_app.R
-import com.example.films_app.dataClasses.Movie
-import com.example.films_app.dataClasses.movies
+import com.example.films_app.dataClasses.Film
+import com.example.films_app.dataClasses.films
 import com.example.films_app.ui.theme.DarkGrey
 import com.example.films_app.ui.theme.LightGrey
 
 
 @Composable
-fun MovieList(navController: NavHostController) {
+fun FilmList(navController: NavHostController) {
     Column {
-        AppTopBar(title = "MCU Films")
+        AppTopBar(title = stringResource(id = R.string.app_title))
         LazyColumn {
-            items(movies) { movie ->
-                MovieItem(movie = movie, navController)
+            items(films) { film ->
+                FilmItem(film = film, navController)
             }
         }
     }
@@ -71,27 +72,27 @@ fun AppTopBar(title: String) {
 }
 
 @Composable
-fun MovieItem(movie: Movie, navController: NavController) {
+fun FilmItem(film: Film, navController: NavController) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(dimensionResource(id = R.dimen.big_padding))
             .clickable {
-                navController.navigate("movieDetail/${movie.title}") {
+                navController.navigate("filmDetail/${film.title}") {
                     launchSingleTop = true
                 }
             }
     ) {
         Image(
-            painter = painterResource(id = movie.imageRes),
-            contentDescription = "Film poster",
+            painter = painterResource(id = film.imageRes),
+            contentDescription = stringResource(id = R.string.content_desc_poster_image),
             modifier = Modifier
                 .size(dimensionResource(id = R.dimen.small_image_size), dimensionResource(id = R.dimen.big_image_size))
                 .clip(shape = MaterialTheme.shapes.medium)
         )
         Spacer(modifier = Modifier.width(dimensionResource(id = R.dimen.width)))
         Text(
-            text = movie.title,
+            text = film.title,
             fontWeight = FontWeight.Bold,
             fontSize =  with(LocalDensity.current) { dimensionResource(id = R.dimen.big_font_size).toSp() },
             modifier = Modifier

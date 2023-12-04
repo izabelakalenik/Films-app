@@ -9,11 +9,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 
 @Composable
-fun DisplayPhotoScreen(imageId: Int) {
+fun PhotoScreen(imageId: Int) {
     Row {
         Image(
             painter = painterResource(id = imageId),
-            contentDescription = "Zoomed photo",
+            contentDescription = "Zoomed selected photo",
             modifier = Modifier.fillMaxSize(),
             contentScale = ContentScale.Fit
         )

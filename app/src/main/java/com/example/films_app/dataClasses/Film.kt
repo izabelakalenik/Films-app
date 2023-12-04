@@ -2,7 +2,7 @@ package com.example.films_app.dataClasses
 
 import com.example.films_app.R
 
-data class Movie(
+data class Film(
     val title: String,
     val imageRes: Int,
     val releaseDate: String,
@@ -14,8 +14,8 @@ data class Movie(
     val trailersList : List<Trailer>,
     val castList : List<CastMember>
 )
-val movies = listOf(
-    Movie(
+val films = listOf(
+    Film(
         "Captain America: The Winter Soldier",
         R.drawable.p1_winter_soldier,
         "March 13, 2014",
@@ -27,7 +27,7 @@ val movies = listOf(
         trailers1,
         cast1
     ),
-    Movie(
+    Film(
         "Captain America: Civil War",
         R.drawable.p2_civil_war,
         "April 12, 2016",
@@ -39,7 +39,7 @@ val movies = listOf(
         trailers2,
         cast2
     ),
-    Movie(
+    Film(
         "Doctor Strange in the Multiverse of Madness",
         R.drawable.p3_dr_strange,
         "May 6, 2022",

@@ -41,6 +41,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.viewinterop.AndroidView
@@ -51,14 +52,14 @@ import androidx.media3.ui.PlayerView
 import androidx.navigation.NavController
 import com.example.films_app.R
 import com.example.films_app.dataClasses.CastMember
-import com.example.films_app.dataClasses.Movie
+import com.example.films_app.dataClasses.Film
 import com.example.films_app.dataClasses.Scene
 import com.example.films_app.dataClasses.Trailer
 import androidx.compose.runtime.remember as remember
 
 
 @Composable
-fun MovieDetail(movie: Movie, navController: NavController) {
+fun FilmDetails(film: Film, navController: NavController) {
     var selectedTabIndex by rememberSaveable { mutableIntStateOf(0) }
 
     Column(
@@ -69,45 +70,45 @@ fun MovieDetail(movie: Movie, navController: NavController) {
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.big_spacer))
     ) {
         Row(modifier = Modifier.fillMaxWidth()) {
-            MainImage(movie, navController)
-            Details(movie)
+            MainImage(film, navController)
+            Details(film)
         }
         Text(
-            text = movie.description,
+            text = film.description,
             modifier = Modifier
                 .fillMaxWidth()
                 .align(Alignment.Start)
         )
-        TabRow(selectedTabIndex, movie, navController) { newSelectedTabIndex ->
+        TabRow(selectedTabIndex, film, navController) { newSelectedTabIndex ->
             selectedTabIndex = newSelectedTabIndex
         }
     }
 }
 
 @Composable
-fun MainImage(movie: Movie, navController: NavController){
+fun MainImage(film: Film, navController: NavController){
     Image(
-        painter = painterResource(id = movie.imageRes),
-        contentDescription = "Film poster",
+        painter = painterResource(id = film.imageRes),
+        contentDescription = stringResource(id = R.string.content_desc_poster_image),
         modifier = Modifier
             .size(
                 dimensionResource(id = R.dimen.huge_image_size),
                 dimensionResource(id = R.dimen.enormous_image_size)
             )
             .clip(MaterialTheme.shapes.medium)
-            .clickable(onClick = { navController.navigate("photo/${movie.imageRes}") })
+            .clickable(onClick = { navController.navigate("photo/${film.imageRes}") })
     )
 }
 
 @Composable
-fun Details(movie: Movie) {
+fun Details(film: Film) {
     Column(
         modifier = Modifier
             .padding(dimensionResource(id = R.dimen.big_padding)),
         verticalArrangement = Arrangement.spacedBy(dimensionResource(id = R.dimen.small_spacer))
     ) {
         Text(
-            text = movie.title,
+            text = film.title,
             fontWeight = FontWeight.Bold,
             fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() },
             modifier = Modifier
@@ -115,16 +116,29 @@ fun Details(movie: Movie) {
                 .align(Alignment.Start),
         )
 
-        Text("Release date: ${movie.releaseDate}", fontStyle = FontStyle.Italic)
-        Text("Director: ${movie.director}", fontStyle = FontStyle.Italic)
-        Text("Duration: ${movie.duration}", fontStyle = FontStyle.Italic)
-        Text("Production Country: ${movie.productionCountry}", fontStyle = FontStyle.Italic)
+        Text(
+            text = stringResource(id = R.string.detail_release, film.releaseDate),
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            text = stringResource(id = R.string.detail_director, film.director),
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            text = stringResource(id = R.string.detail_duration, film.duration),
+            fontStyle = FontStyle.Italic
+        )
+        Text(
+            text = stringResource(id = R.string.detail_production_country, film.productionCountry),
+            fontStyle = FontStyle.Italic
+        )
     }
 }
 
 @Composable
-fun TabRow(selectedTabIndex: Int, movie: Movie, navController: NavController, onTabSelected: (Int) -> Unit) {
-    val tabTitles = listOf("Scenes", "Trailers", "Cast")
+fun TabRow(selectedTabIndex: Int, film: Film, navController: NavController, onTabSelected: (Int) -> Unit) {
+
+    val tabTitles = listOf(stringResource(id = R.string.tab_1), stringResource(id = R.string.tab_2), stringResource(id = R.string.tab_3))
     val selectedTabIndices = remember { mutableStateListOf<Int>().apply { repeat(tabTitles.size) { add(if (it == selectedTabIndex) 1 else 0) } } }
 
     TabRow(
@@ -147,9 +161,9 @@ fun TabRow(selectedTabIndex: Int, movie: Movie, navController: NavController, on
     }
 
     when (selectedTabIndex) {
-        0 -> FilmScenesTab(movie.scenesList, navController)
-        1 -> TrailersTab(movie.trailersList)
-        2 -> CastTab(movie.castList, navController)
+        0 -> FilmScenesTab(film.scenesList, navController)
+        1 -> TrailersTab(film.trailersList)
+        2 -> CastTab(film.castList, navController)
     }
 }
 
@@ -160,7 +174,7 @@ fun FilmScenesTab(scenes: List<Scene>, navController: NavController) {
         items(scenes) { scene ->
             Image(
                 painter = painterResource(id = scene.sceneImage),
-                contentDescription = "Scenes from film",
+                contentDescription = stringResource(id = R.string.content_desc_scene_image),
                 modifier = Modifier
                     .height(dimensionResource(id = R.dimen.small_image_size))
                     .padding(dimensionResource(id = R.dimen.small_padding))
@@ -228,7 +242,7 @@ fun CastTab(cast: List<CastMember>, navController: NavController) {
             Row {
                 Image(
                     painter = painterResource(id = castMember.actorImage),
-                    contentDescription = "Actor photo",
+                    contentDescription = stringResource(id = R.string.content_desc_actor_photo),
                     modifier = Modifier
                         .size(
                             dimensionResource(id = R.dimen.small_image_size),
