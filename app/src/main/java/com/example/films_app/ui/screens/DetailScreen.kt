@@ -153,7 +153,7 @@ fun TabRow(selectedTabIndex: Int, film: Film, navController: NavController, onTa
                     onTabSelected(index)
                 },
                 modifier = Modifier
-                    .height(dimensionResource(id = R.dimen.height))
+                    .height(dimensionResource(id = R.dimen.small_height))
             ) {
                 Text(text = title, fontWeight = FontWeight.Bold, fontSize = with(LocalDensity.current) { dimensionResource(id = R.dimen.medium_font_size).toSp() })
             }
