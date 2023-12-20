@@ -1,3 +1,4 @@
+# Films app
 Project for a Mobile applications for Android platform course - 5th semester.
 
 Films application that offers a user-friendly interface with essential details like director, release date, and a brief synopsis. 
